@@ -6,6 +6,7 @@ public class PlayerCard {
 	
 	private int id;
 	private String name;
+	private String position;
 	private int draftYear;
 	private int points;
 	private int assists;
@@ -32,6 +33,14 @@ public class PlayerCard {
 		this.name = name;
 	}
 
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+	
 	public int getDraftYear() {
 		return draftYear;
 	}
@@ -66,7 +75,7 @@ public class PlayerCard {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(assists, draftYear, id, name, points, rebounds);
+		return Objects.hash(assists, draftYear, id, name, points, position, rebounds);
 	}
 
 	@Override
@@ -79,13 +88,16 @@ public class PlayerCard {
 			return false;
 		PlayerCard other = (PlayerCard) obj;
 		return assists == other.assists && draftYear == other.draftYear && id == other.id
-				&& Objects.equals(name, other.name) && points == other.points && rebounds == other.rebounds;
+				&& Objects.equals(name, other.name) && points == other.points
+				&& Objects.equals(position, other.position) && rebounds == other.rebounds;
 	}
 
 	@Override
 	public String toString() {
-		return "PlayerCard [id=" + id + ", name=" + name + ", draftYear=" + draftYear + ", points=" + points
-				+ ", assists=" + assists + ", rebounds=" + rebounds + "]";
+		return "PlayerCard [id=" + id + ", name=" + name + ", position=" + position + ", draftYear=" + draftYear
+				+ ", points=" + points + ", assists=" + assists + ", rebounds=" + rebounds + "]";
 	}
+
+	
 	
 }
