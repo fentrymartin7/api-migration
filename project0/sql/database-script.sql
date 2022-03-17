@@ -1,8 +1,8 @@
--- create player card table --
 
+-- create player card table --
 create table if not exists player_cards(
 id serial primary key,
-name varchar(30)
+name varchar(30),
 pos varchar(1),
 draft_year integer,
 points integer,
@@ -10,7 +10,8 @@ assists integer,
 rebounds integer
 );
 
-insert into player_cards(name,pos,draft_year,career_points,career_rebounds,career_assists)
+-- insert data into player_cards table --
+insert into player_cards(name,pos,draft_year,points,rebounds,assists)
 values
 ('Michael Jordan','G',1984,32292,6672,5633),
 ('Kobe Bryant','G',1996,33643,7047,6306),
