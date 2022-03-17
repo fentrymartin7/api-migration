@@ -14,7 +14,7 @@ public class ConnectionUtil {
 		// to load url, username, password
 		Properties prop = new Properties();
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		prop.load(loader.getResourceAsStream("credentialss.properties"));
+		prop.load(loader.getResourceAsStream("credentials.properties"));
 			
 		String url = prop.getProperty("url");
 		String username = prop.getProperty("username");
