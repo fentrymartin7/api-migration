@@ -16,7 +16,7 @@ public class PlayerCard {
 		super();
 	
 	}
-
+	
 	public int getId() {
 		return id;
 	}
@@ -75,7 +75,7 @@ public class PlayerCard {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(assists, draftYear, id, name, points, position, rebounds);
+		return Objects.hash(id, name, position, draftYear, points, position, rebounds);
 	}
 
 	@Override

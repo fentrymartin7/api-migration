@@ -1,4 +1,4 @@
-
+--drop table player_cards;
 -- create player card table --
 create table if not exists player_cards(
 id serial primary key,
@@ -6,9 +6,47 @@ name varchar(30),
 pos varchar(1),
 draft_year integer,
 points integer,
-assists integer,
-rebounds integer
+rebounds integer,
+assists integer
 );
+
+create table if not exists teams(
+id serial primary key,
+name varchar(30)
+);
+
+insert into teams(name) 
+values
+('76ers'),
+('Bucks'),
+('Bulls'),
+('Cavaliers'),
+('Celtics'),
+('Clippers'),
+('Grizzlies'),
+('Hawks'),
+('Heat'),
+('Hornets'),
+('Jazz'),
+('Kings'),
+('Knicks'),
+('Lakers'),
+('Magic'),
+('Mavericks'),
+('Nets'),
+('Nuggets'),
+('Pacers'),
+('Pelicans'),
+('Pistons'),
+('Raptors'),
+('Rockets'),
+('Spurs'),
+('Suns'),
+('Thunder'),
+('Timberwolves'),
+('Trailblazers'),
+('Warriors'),
+('Wizards');
 
 -- insert data into player_cards table --
 insert into player_cards(name,pos,draft_year,points,rebounds,assists)
