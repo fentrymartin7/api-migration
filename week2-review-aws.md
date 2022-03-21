@@ -30,21 +30,37 @@ it's cost saving.
 
 ### EC2
 
-* What are the configuration options for EC2?
+1. What are the configuration options for EC2?
+- AMI configuration to determine what kind of virtual machine you want(example: Amazon Linux 2 AMI). It acts as
+  a template for your virtual machine. 
+- Security groups configuration to control incoming and outgoing traffic based on IP address.
  
-* What are the different EC2 instance sizes/types?
+2. What are the different EC2 instance sizes/types?
+- T2 micro, 
  
-* Once you create an EC2, how to connect to it?
+3. Once you create an EC2, how to connect to it?
+- On the AWS Management Console, go to EC2 > Instances > and click on the configured instance. Click Connect > SSH Client.
+  Then in the terminal run the ssh command: ssh -i [your-key-file] [your-ec2-instance-address]
  
-* What are Security Groups? When defining a rule for a security group, what 3 things do you need to specify?
+4. What are Security Groups? When defining a rule for a security group, what 3 things do you need to specify?
+- Security groups act as a virtual firewall for ec2 instances to control incoming and outgoing traffic based on IP address.
+  You need to specify the port number, the protocol, and the source.
   
-* What's the difference between scalability, elasticity, and resiliency?
+5. What's the difference between scalability, elasticity, and resiliency?
+- Scalability is the ability to scale up as needed and pay for only what you use.
+- Elasticity is the ability to instantly scale to meet spikes in demand or traffic.
+- Resiliecy is the abilty to operate applications without interruption.
  
-* Ways of paying for EC2?
+6. Ways of paying for EC2?
+- You are able to have access to free tier t2.micro instances that allow 750 hours of use between all instances each month
+  for one year. Then after that you'll have to pay by the second for instances.
 
 
 ### RDS
 
-* What's an RDS?
+1. What's an RDS?
+- An RDS is an Amazon Relational Database Service and is a web service that simplifies the set up of a relational database
+  on the AWS cloud.
 
-* Which vendors are supported?
+2. Which vendors are supported?
+- Aurora, PostgresSQL, MySQL, MariaDB, Oracle, Microsoft SQL Server
