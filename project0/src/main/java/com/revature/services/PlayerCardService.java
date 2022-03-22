@@ -11,7 +11,17 @@ import com.revature.models.PlayerCard;
 
 public class PlayerCardService {
 
-	private PlayerCardDao playerCardDao = new PlayerCardPostgres();
+	private PlayerCardDao playerCardDao;
+	
+	public PlayerCardService() {
+		
+		playerCardDao = new PlayerCardPostgres();
+	}
+	
+	public PlayerCardService(PlayerCardDao playerCardDao) {
+		
+		this.playerCardDao = playerCardDao;
+	}
 	
 	// get a card by its id
 	public PlayerCard getById(int id) throws CardNotFoundException{
@@ -24,54 +34,39 @@ public class PlayerCardService {
 		return card;
 	}
 	
-	public List<PlayerCard>getCardsByPosition(String position) throws CardNotFoundException{
+	public List<PlayerCard>getCardsByPosition(String position) {
 		List<PlayerCard> cards = playerCardDao.getCardsByPosition(position);
 		
-		if(cards==null) {
-			throw new CardNotFoundException();
-		}
 		return cards;
 	}
 	
-	public List<PlayerCard> getCardsByPointsReboundsAssists(int points,int rebounds,int assists) throws CardNotFoundException{
+	public List<PlayerCard> getCardsByPointsReboundsAssists(int points,int rebounds,int assists) {
 		List<PlayerCard> cards = playerCardDao.getCardsByPointsReboundsAssists(points, rebounds, assists);
 		
-		if(cards==null) {
-			throw new CardNotFoundException();
-		}
 		return cards;
 	}
 	
-	public List<PlayerCard>getCardsByPoints(int points) throws CardNotFoundException{
+	public List<PlayerCard>getCardsByPoints(int points) {
 		List<PlayerCard> cards = playerCardDao.getCardsByPoints(points);
-		if(cards==null) {
-			throw new CardNotFoundException();
-		}
+		
 		return cards;
 	}
 	
-	public List<PlayerCard>getCardsByRebounds(int rebounds) throws CardNotFoundException{
+	public List<PlayerCard>getCardsByRebounds(int rebounds) {
 		List<PlayerCard> cards = playerCardDao.getCardsByRebounds(rebounds);
-		if(cards==null) {
-			throw new CardNotFoundException();
-		}
+		
 		return cards;
 	}
 	
-	public List<PlayerCard>getCardsByAssists(int assists) throws CardNotFoundException{
-		List<PlayerCard> cards = playerCardDao.getCardsByPoints(assists);
-		if(cards==null) {
-			throw new CardNotFoundException();
-		}
+	public List<PlayerCard>getCardsByAssists(int assists) {
+		List<PlayerCard> cards = playerCardDao.getCardsByAssists(assists);
+		
 		return cards;
 	}
 	
-	public List<PlayerCard> getAllCards() throws CardNotFoundException{
+	public List<PlayerCard> getAllCards() {
 		List<PlayerCard> cards = playerCardDao.getAllCards();
 		
-		if(cards==null) {
-			throw new CardNotFoundException();
-		}
 		return cards;
 	}
 	

@@ -9,14 +9,25 @@ public class PlayerCard {
 	private String position;
 	private int draftYear;
 	private int points;
-	private int assists;
 	private int rebounds;
+	private int assists;
 	
 	public PlayerCard() {
 		super();
 	
 	}
 	
+	public PlayerCard(int id, String name, String position, int draftYear, int points, int rebounds,int assists) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.position = position;
+		this.draftYear = draftYear;
+		this.points = points;
+		this.assists = assists;
+		this.rebounds = rebounds;
+	}
+
 	public int getId() {
 		return id;
 	}

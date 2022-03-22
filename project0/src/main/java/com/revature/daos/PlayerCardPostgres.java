@@ -9,11 +9,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.revature.models.PlayerCard;
 import com.revature.util.ConnectionUtil;
 
 public class PlayerCardPostgres implements PlayerCardDao{
-
+	
+	private static Logger log = LogManager.getRootLogger();
 	@Override
 	public PlayerCard getById(int id) {
 		// set up query to get a player card by its id
@@ -272,11 +276,11 @@ public class PlayerCardPostgres implements PlayerCardDao{
 			if(rs.next()) {
 				generatedId = rs.getInt("id");
 				System.out.print(generatedId);
+				log.info("A new card was added.");
 			}
 			
-		} catch(SQLException e) {
-			e.printStackTrace();
-		} catch(IOException e) {
+		} catch(SQLException | IOException e) {
+			log.error("Exception was thrown: " + e.fillInStackTrace());
 			e.printStackTrace();
 		}
 		return generatedId;
@@ -300,11 +304,14 @@ public class PlayerCardPostgres implements PlayerCardDao{
 			ps.setInt(7, card.getId());
 			
 			ResultSet rs = ps.executeQuery();
-			if(rs.next())
+			if(rs.next()) {
+				log.info("An existing card was updated.");
 				return true;
+			}
 			
 		} catch(SQLException | IOException e) {
 			e.printStackTrace();
+			log.error("An exception was thrown while trying to update card: "+e.fillInStackTrace());
 		}
 		return false;
 		
@@ -321,11 +328,13 @@ public class PlayerCardPostgres implements PlayerCardDao{
 			ResultSet rs = ps.executeQuery();
 			
 			if(rs.next()) {
+				log.info("An existing card was deleted.");
 				return true;
 			}
 			
 		} catch(SQLException | IOException e) {
 			e.printStackTrace();
+			log.error("An exception was thrown while trying to delete card: "+e.fillInStackTrace());
 		}
 		return false;
 	}

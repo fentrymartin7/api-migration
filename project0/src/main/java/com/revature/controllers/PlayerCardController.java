@@ -47,7 +47,7 @@ public class PlayerCardController {
 		ctx.json(pcs.getAllCards());
 	}
 	
-	public static void getCardsByPosition(Context ctx) throws CardNotFoundException{
+	public static void getCardsByPosition(Context ctx){
 		String pos = ctx.pathParam("pos");
 		
 		List<PlayerCard> cards;
@@ -55,7 +55,7 @@ public class PlayerCardController {
 			cards = pcs.getCardsByPosition(pos);
 			ctx.json(cards);
 			ctx.status(200);
-		} catch(CardNotFoundException e){
+		} catch(Exception e){
 			ctx.status(404);
 			ctx.result("Unable to get cards.");
 			e.printStackTrace();
@@ -63,7 +63,7 @@ public class PlayerCardController {
 		
 	}
 	
-	public static void getCardsByPointsReboundsAssists(Context ctx) throws CardNotFoundException{
+	public static void getCardsByPointsReboundsAssists(Context ctx) {
 		int points = Integer.parseInt(ctx.pathParam("points"));
 		int rebounds = Integer.parseInt(ctx.pathParam("rebounds"));
 		int assists = Integer.parseInt(ctx.pathParam("assists"));
@@ -73,7 +73,7 @@ public class PlayerCardController {
 			cards = pcs.getCardsByPointsReboundsAssists(points,rebounds,assists);
 			ctx.json(cards);
 			ctx.status(200);
-		} catch(CardNotFoundException e){
+		} catch(Exception e){
 			ctx.status(404);
 			ctx.result("Unable to get cards.");
 			e.printStackTrace();
@@ -81,7 +81,7 @@ public class PlayerCardController {
 		
 	}
 	
-	public static void getCardsByPoints(Context ctx) throws CardNotFoundException{
+	public static void getCardsByPoints(Context ctx) {
 		int points = Integer.parseInt(ctx.pathParam("points"));
 		
 		List<PlayerCard> cards;
@@ -89,7 +89,7 @@ public class PlayerCardController {
 			cards = pcs.getCardsByPoints(points);
 			ctx.json(cards);
 			ctx.status(200);
-		} catch(CardNotFoundException e){
+		} catch(Exception e){
 			ctx.status(404);
 			ctx.result("Unable to get cards.");
 			e.printStackTrace();
@@ -97,7 +97,7 @@ public class PlayerCardController {
 		
 	}
 	
-	public static void getCardsByRebounds(Context ctx) throws CardNotFoundException{
+	public static void getCardsByRebounds(Context ctx) {
 		int rebounds = Integer.parseInt(ctx.pathParam("rebounds"));
 		
 		List<PlayerCard> cards;
@@ -105,7 +105,7 @@ public class PlayerCardController {
 			cards = pcs.getCardsByRebounds(rebounds);
 			ctx.json(cards);
 			ctx.status(200);
-		} catch(CardNotFoundException e){
+		} catch(Exception e){
 			ctx.status(404);
 			ctx.result("Unable to get cards.");
 			e.printStackTrace();
@@ -113,7 +113,7 @@ public class PlayerCardController {
 		
 	}
 	
-	public static void getCardsByAssists(Context ctx) throws CardNotFoundException{
+	public static void getCardsByAssists(Context ctx) {
 		int assists = Integer.parseInt(ctx.pathParam("assists"));
 		
 		List<PlayerCard> cards;
@@ -121,7 +121,7 @@ public class PlayerCardController {
 			cards = pcs.getCardsByPoints(assists);
 			ctx.json(cards);
 			ctx.status(200);
-		} catch(CardNotFoundException e){
+		} catch(Exception e){
 			ctx.status(404);
 			ctx.result("Unable to get cards.");
 			e.printStackTrace();
