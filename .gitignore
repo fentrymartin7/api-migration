@@ -3,7 +3,7 @@
 *.class
 
 .settings/
-.factortypath
+.factorypath
 
 # Log file
 *.log
