@@ -13,6 +13,7 @@ public interface PlayerCardDao {
 	public List<PlayerCard> getCardsByPoints(int points);
 	public List<PlayerCard> getCardsByRebounds(int rebounds);
 	public List<PlayerCard> getCardsByAssists(int assists);
+	public List<PlayerCard> getCardsByTeam(String teamName);
 	public int addCard(PlayerCard card);
 	public boolean updateCard(PlayerCard card);
 	public boolean deleteCardById(int id);

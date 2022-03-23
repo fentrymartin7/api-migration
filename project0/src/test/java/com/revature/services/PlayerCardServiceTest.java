@@ -75,6 +75,12 @@ public class PlayerCardServiceTest {
 	}
 	
 	@Test
+	public void getCardsByTeamTest() {
+		when(cardDao.getCardsByTeam("x")).thenReturn(cards);
+		assertEquals(cards,pcs.getCardsByTeam("x"));
+	}
+	
+	@Test
 	public void getAllCardsTest() {
 		when(cardDao.getAllCards()).thenReturn(cards);
 		assertEquals(cards,pcs.getAllCards());
@@ -83,6 +89,9 @@ public class PlayerCardServiceTest {
 	@Test
 	public void addCardTest() throws CardNotCreatedException {
 		when(cardDao.addCard(card)).thenReturn(2);
+		assertDoesNotThrow( () ->{
+			pcs.addCard(card);
+		});
 		assertEquals(true,pcs.addCard(card));
 	}
 	

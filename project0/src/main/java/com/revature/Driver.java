@@ -65,6 +65,10 @@ public class Driver {
 					});
 				});
 				
+				path("team/{team-name}", () ->{
+					get(PlayerCardController::getCardsByTeam);
+				});
+				
 			});
 			
 		

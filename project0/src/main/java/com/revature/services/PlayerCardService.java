@@ -64,6 +64,12 @@ public class PlayerCardService {
 		return cards;
 	}
 	
+	public List<PlayerCard>getCardsByTeam(String teamName) {
+		List<PlayerCard> cards = playerCardDao.getCardsByTeam(teamName);
+		
+		return cards;
+	}
+	
 	public List<PlayerCard> getAllCards() {
 		List<PlayerCard> cards = playerCardDao.getAllCards();
 		

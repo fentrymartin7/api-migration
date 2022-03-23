@@ -255,6 +255,41 @@ public class PlayerCardPostgres implements PlayerCardDao{
 		
 		return cards;
 	}
+	
+	@Override
+	public List<PlayerCard> getCardsByTeam(String teamName) {
+		String sql = "select * from player_cards p join player_teams_played_for t on p.id = "
+				+ "t.player_id where t.team_name = ?;";
+		
+		List<PlayerCard> cards = new ArrayList<>();
+		
+		try(Connection c = ConnectionUtil.getConnectionFromFile()){
+			PreparedStatement ps = c.prepareStatement(sql);
+			ps.setString(1, teamName);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				PlayerCard playerCard = new PlayerCard();
+				playerCard.setId(rs.getInt("id"));
+				playerCard.setName(rs.getString("name"));
+				playerCard.setPosition(rs.getString("pos"));
+				playerCard.setDraftYear(rs.getInt("draft_year"));
+				playerCard.setPoints(rs.getInt("points"));
+				playerCard.setRebounds(rs.getInt("rebounds"));
+				playerCard.setAssists(rs.getInt("assists"));
+				
+				cards.add(playerCard);
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+		return cards;
+	}
 
 	@Override
 	public int addCard(PlayerCard card) {
@@ -338,5 +373,7 @@ public class PlayerCardPostgres implements PlayerCardDao{
 		}
 		return false;
 	}
+
+	
 	
 }

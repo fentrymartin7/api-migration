@@ -123,10 +123,25 @@ public class PlayerCardController {
 			ctx.status(200);
 		} catch(Exception e){
 			ctx.status(404);
-			ctx.result("Unable to get cards.");
+			ctx.result("Unable to retrieve cards.");
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public static void getCardsByTeam(Context ctx) {
+		String teamName = ctx.pathParam("team-name");
+		
+		List<PlayerCard> cards;
+		try {
+			cards = pcs.getCardsByTeam(teamName);
+			ctx.json(cards);
+			ctx.status(200);
+		} catch(Exception e) {
+			ctx.status(404);
+			ctx.result("Unable to retrieve cards.");
+			e.printStackTrace();
+		}
 	}
 	
 	public static void updateCard(Context ctx) {
