@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -22,24 +23,24 @@ public class PlayerCardService {
 		this.pcr = pcr;
 	}
 	
-	public List<PlayerCard> getAllCards(){
-		return pcr.findAll();
+	public List<PlayerCard> getAllCards(String name,String position,String draftYear,String points, String rebounds,String assists){
+		if(name==null&&position==null&&draftYear==null&&points==null&&rebounds==null&&assists==null) {
+			return pcr.findAll();
+		}
+		List<PlayerCard> cards = pcr.findAll().stream()
+				.filter(c -> c.getName().equals(name))
+				.filter(c -> c.getPosition().equals(position))
+				.filter(c -> c.getDraftYear() == Integer.parseInt(draftYear))
+				.filter(c -> c.getPoints() >= Integer.parseInt(points))
+				.filter(c -> c.getRebounds() >= Integer.parseInt(rebounds))
+				.filter(c -> c.getAssists() >= Integer.parseInt(assists))
+				.collect(Collectors.toList());
+		
+		return cards;
 	}
 	
 	public PlayerCard getCardById(int id) {
 		return pcr.findCardById(id);
-	}
-	
-	public List<PlayerCard> getCardsByName(String name){
-		return pcr.findCardsByName(name);
-	}
-	
-	public List<PlayerCard> getCardsByPosition(String pos){
-		return pcr.findCardsByPosition(pos);
-	}
-	
-	public List<PlayerCard> getCardsByPoints(int points){
-		return pcr.findCardsByPoints(points);
 	}
 	
 	@Transactional
@@ -56,7 +57,7 @@ public class PlayerCardService {
 	
 	@Transactional
 	public void deleteCard(int id) throws CardNotFoundException {
-		// this tries to retrieve a card by id, if it doesn't exist, throws an exception
+		// try to retrieve a card by id, if it doesn't exist, throw an exception
 		getCardById(id);
 
 		pcr.deleteById(id);

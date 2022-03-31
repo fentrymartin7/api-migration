@@ -3,6 +3,8 @@ insert into users (username, password, role) values ('dleifer1', 'kdrq5QYwyP', '
 insert into users (username, password, role) values ('smattheissen2', 'qUR8Im8', 'USER');
 insert into users (username, password, role) values ('bbarajaz3', 'OY6qM6TuwCI', 'USER');
 insert into users (username, password, role) values ('gjohnstone4', 'J6zJPeOTodYD', 'USER');
+insert into users (username, password, role) values ('fentry', 'pass123', 'ADMIN');
+
 
 
 insert into player_cards(name,position,draft_year,points,rebounds,assists)
