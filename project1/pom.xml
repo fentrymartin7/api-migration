@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.revature</groupId>
 	<artifactId>project1</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1</version>
 	<name>project1</name>
 	<description>project1</description>
 	<properties>

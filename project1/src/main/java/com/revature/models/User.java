@@ -29,6 +29,13 @@ public class User {
 		super();
 	}
 
+	public User(String username, String password) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.role = Role.CUSTOMER;
+	}
+
 	public int getId() {
 		return id;
 	}

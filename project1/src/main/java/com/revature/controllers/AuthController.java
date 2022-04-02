@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.revature.dtos.UserDTO;
+import com.revature.models.User;
 import com.revature.services.AuthService;
 
 @RestController
@@ -30,7 +30,7 @@ public class AuthController {
 		this.authServ = authServ;
 	}
 	
-	@PostMapping
+	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestParam(name="username")String username, @RequestParam(name="password")String password){
 		// best handled as a filter
 		// Generated a request id for new requests to be handled, this id can be attached to logs to show the flow of the request through the application
@@ -47,6 +47,17 @@ public class AuthController {
 		log.info("Login successful");
 		// constructor for response entity(body, headers, status)
 		return new ResponseEntity<>("Login successful.", hh, HttpStatus.OK);
+	}
+	
+	@PostMapping("/register")
+	public ResponseEntity<String> register(@RequestParam(name="username")String username, @RequestParam(name="password")String password){
+		MDC.put("requestId", UUID.randomUUID().toString());
+		String token = authServ.register(new User(username,password));
+		
+		HttpHeaders hh = new HttpHeaders();
+		hh.set("Authorization", token);
+		
+		return new ResponseEntity<>("Registration successful.",hh,HttpStatus.OK);
 	}
 	
 }

@@ -11,8 +11,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Check;
+
 @Entity
 @Table(name="player_cards")
+@Check(constraints="points >= 0 and rebounds >= 0 and assists >= 0 and draft_year >=1947 and draft_year < 2022 and "
+		+ "(position = 'G' or position = 'F' or position = 'C')")
 public class PlayerCard {
 
 	@Id
@@ -24,7 +28,7 @@ public class PlayerCard {
 	private String position;
 	@Column(name="draft_year",nullable=false)
 	private int draftYear;
-	@Column(columnDefinition = "integer check (points > 0)" )
+	@Column
 	private int points;
 	@Column
 	private int rebounds;

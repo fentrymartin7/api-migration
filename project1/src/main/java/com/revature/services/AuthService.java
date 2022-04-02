@@ -22,6 +22,13 @@ public class AuthService {
 		this.userRepo = userRepo;
 	}
 	
+	public String register(User user) {
+		userRepo.save(user);
+		
+		log.info("A new user was created");
+		return user.getId()+":"+user.getRole().toString();
+	}
+	
 	public String login(String username, String password) {
 		User user = userRepo.findUserByUsername(username);
 	
@@ -35,7 +42,7 @@ public class AuthService {
 		return user.getId()+":"+user.getRole().toString();
 	}
 	
-	public void verify(String token) {
+	public void verifyAdmin(String token) {
 		// verify that the token passed in is not null
 		if(token == null) {
 			throw new AuthenticationException("null token");

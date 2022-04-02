@@ -46,17 +46,18 @@ public class UserController {
 		// this logic should be handled as a filter
 		MDC.put("requestId", UUID.randomUUID().toString());
 		// auth logic throws a runtime exception if not verified, better placed as a filter
-		authService.verify(token);
+		authService.verifyAdmin(token);
 	
 		log.info("users retrieved");
 		return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<String> postUser(@RequestBody User user){
+	public ResponseEntity<String> postUser(@RequestHeader(value="Authorization",required=false)String token,@RequestBody User user){
 		/*-
 		 * logic to return appropriate response based on creation success
 		 */
+		authService.verifyAdmin(token);
 		userService.createUser(user);
 		return new ResponseEntity<>("UserCreated!", HttpStatus.CREATED);
 	}
@@ -82,7 +83,8 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteUserById(@PathVariable("id") int id) {
+	public ResponseEntity<String> deleteUserById(@RequestHeader(value="Authorization",required=false)String token,@PathVariable("id") int id) {
+		authService.verifyAdmin(token);
 		userService.deleteUser(id);
 		return new ResponseEntity<>("User was deleted",HttpStatus.OK);
 	}
