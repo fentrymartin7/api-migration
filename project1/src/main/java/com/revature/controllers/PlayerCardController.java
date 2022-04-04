@@ -29,14 +29,14 @@ import com.revature.services.PlayerCardService;
 public class PlayerCardController {
 
 	private PlayerCardService pcs;
-	private AuthService as;
+	private AuthService authService;
 	private static Logger log = LoggerFactory.getLogger(PlayerCardController.class); 
 	
 	@Autowired
-	public PlayerCardController(PlayerCardService pcs, AuthService as) {
+	public PlayerCardController(PlayerCardService pcs, AuthService authService) {
 		super();
 		this.pcs = pcs;
-		this.as = as;
+		this.authService = authService;
 	}
 	
 	@GetMapping
@@ -63,7 +63,7 @@ public class PlayerCardController {
 		// this logic should be handled as a filter
 		MDC.put("requestId", UUID.randomUUID().toString());
 		// auth logic throws a runtime exception if not verified, better placed as a filter
-		as.verifyAdmin(token);
+		
 			
 		log.info("New card created.");
 		pcs.createCard(card);
@@ -79,7 +79,7 @@ public class PlayerCardController {
 	public ResponseEntity<PlayerCard> updateCard(@PathVariable("id")int id, @RequestBody PlayerCard card,
 												@RequestHeader(value="Authorization",required=false)String token) {
 		MDC.put("requestId", UUID.randomUUID().toString());
-		as.verifyAdmin(token);		
+				
 		log.info("Card of id "+ id + "was updated.");
 		return new ResponseEntity<>(pcs.updateCard(id, card), HttpStatus.OK);
 	}
@@ -88,7 +88,7 @@ public class PlayerCardController {
 	public ResponseEntity<String> deleteCardById(@PathVariable("id") int id,
 												@RequestHeader(value="Authorization",required=false)String token) {
 		MDC.put("requestId", UUID.randomUUID().toString());
-		as.verifyAdmin(token);		
+			
 		
 		pcs.deleteCard(id);
 		log.info("Card of id "+ id + "was deleted.");

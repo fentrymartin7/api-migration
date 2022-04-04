@@ -17,14 +17,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.dtos.UserDTO;
-import com.revature.models.Role;
 import com.revature.models.User;
 import com.revature.services.AuthService;
 import com.revature.services.UserService;
+
+import io.jsonwebtoken.Claims;
 
 @RestController
 @RequestMapping("/users")
@@ -46,9 +46,13 @@ public class UserController {
 		// this logic should be handled as a filter
 		MDC.put("requestId", UUID.randomUUID().toString());
 		// auth logic throws a runtime exception if not verified, better placed as a filter
-		authService.verifyAdmin(token);
-	
-		log.info("users retrieved");
+		Claims claims = authService.verify(token);
+		if(!claims.get("role").toString().equals("ADMIN")) {
+			log.warn("Unauthorized.");
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
+			
+		log.info(claims.get("username")+" retrieved the list of users.");
 		return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
 	}
 	
@@ -57,19 +61,24 @@ public class UserController {
 		/*-
 		 * logic to return appropriate response based on creation success
 		 */
-		authService.verifyAdmin(token);
+		Claims claims = authService.verify(token);
+		if(!claims.get("role").toString().equals("ADMIN")) {
+			log.warn("Unauthorized attempt to create new user.");
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
 		userService.createUser(user);
+		log.info(claims.get("username")+" created a new user.");
 		return new ResponseEntity<>("UserCreated!", HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<UserDTO> getById(@PathVariable("id") int id, @RequestHeader("Authorization") String token){
+	public ResponseEntity<UserDTO> getById(@PathVariable("id") int id, @RequestHeader(value="Authorization",required=false)String token){
 		
-		if (token == null) {
-			log.warn("[insert user info here] tried to access endpoint /users/id");
+		Claims claims = authService.verify(token);
+		if(!claims.get("role").toString().equals("ADMIN")) {
+			log.warn("Unauthorized attempt to create new user.");
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
-
 		MDC.put("userToken", token);
 		UserDTO user = userService.getUserById(id);
 		MDC.clear();
@@ -78,13 +87,22 @@ public class UserController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable("id") int id) {
+	public ResponseEntity<User> updateUser(@RequestHeader(value="Authorization",required=false)String token,@RequestBody User user, @PathVariable("id") int id) {
+		Claims claims = authService.verify(token);
+		if(!claims.get("role").toString().equals("ADMIN")) {
+			log.warn("Unauthorized attempt to update user of id "+id+".");
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
 		return new ResponseEntity<>(userService.updateUser(id, user), HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteUserById(@RequestHeader(value="Authorization",required=false)String token,@PathVariable("id") int id) {
-		authService.verifyAdmin(token);
+		Claims claims = authService.verify(token);
+		if(!claims.get("role").toString().equals("ADMIN")) {
+			log.warn("Unauthorized attempt to delete user of id "+id+".");
+			return new ResponseEntity<>("Unauthorized attempt to delete user of id "+id,HttpStatus.FORBIDDEN);
+		}
 		userService.deleteUser(id);
 		return new ResponseEntity<>("User was deleted",HttpStatus.OK);
 	}
