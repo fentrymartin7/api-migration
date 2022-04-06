@@ -38,13 +38,14 @@ public class AuthService {
 		log.info("A new user was created");
 		
 		Map<String,Object> claims = new HashMap<>();
+		claims.put("id", user.getId());
 		claims.put("username", user.getUsername());
 		claims.put("role", user.getRole().toString());
 		
 		JwtBuilder token = Jwts.builder()
 				.setClaims(claims)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis()+60000))
+				.setExpiration(new Date(System.currentTimeMillis()+180000))
 				.setSubject(user.getUsername())
 				.signWith(SignatureAlgorithm.HS256, secretKey);
 		
@@ -61,13 +62,14 @@ public class AuthService {
 		log.info("User " + user.getUsername() + "'s credentials validated.");
 		
 		Map<String,Object> claims = new HashMap<>();
+		claims.put("id", user.getId());
 		claims.put("username", username);
 		claims.put("role", user.getRole());
 		
 		JwtBuilder token = Jwts.builder()
 				.setClaims(claims)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis()+60000))
+				.setExpiration(new Date(System.currentTimeMillis()+180000))
 				.setSubject(username)
 				.signWith(SignatureAlgorithm.HS256, secretKey);
 		

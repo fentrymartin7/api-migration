@@ -43,6 +43,19 @@ public class PlayerCard {
 		super();
 		
 	}
+	
+	public PlayerCard(int id, String name, String position, int draftYear, int points, int rebounds, int assists,
+			User cardOwner) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.position = position;
+		this.draftYear = draftYear;
+		this.points = points;
+		this.rebounds = rebounds;
+		this.assists = assists;
+		this.cardOwner = cardOwner;
+	}
 
 	public int getId() {
 		return id;

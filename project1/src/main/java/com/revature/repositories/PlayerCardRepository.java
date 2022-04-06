@@ -12,15 +12,9 @@ import com.revature.models.PlayerCard;
 public interface PlayerCardRepository extends JpaRepository<PlayerCard,Integer>{
 	
 	public PlayerCard findCardById(int id);
-	
-	
 	public List<PlayerCard> findCardsByName(String name);
-	
-	public List<PlayerCard> findCardsByPosition(String position);
-	
 	@Query("select p from PlayerCard p where p.points >= :points")
 	public List<PlayerCard> findCardsByPoints(int points);
-	
-	@Query("select p from PlayerCard p where p.points >= :points and p.rebounds >= :rebounds and p.assists >= :assists")
-	public List<PlayerCard> findCardsByPRA(int points, int rebounds, int assists);
+	@Query("select p from PlayerCard p where p.cardOwner = null")
+	public List<PlayerCard> findAvailableCards();
 }

@@ -1,7 +1,6 @@
 package com.revature.services;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.revature.exceptions.CardNotFoundException;
 import com.revature.models.PlayerCard;
+import com.revature.models.User;
 import com.revature.repositories.PlayerCardRepository;
 
 @Service
@@ -23,24 +23,30 @@ public class PlayerCardService {
 		this.pcr = pcr;
 	}
 	
-	public List<PlayerCard> getAllCards(String name,String position,String draftYear,String points, String rebounds,String assists){
-		if(name==null&&position==null&&draftYear==null&&points==null&&rebounds==null&&assists==null) {
-			return pcr.findAll();
-		}
-		List<PlayerCard> cards = pcr.findAll().stream()
-				.filter(c -> c.getName().equals(name))
-				.filter(c -> c.getPosition().equals(position))
-				.filter(c -> c.getDraftYear() == Integer.parseInt(draftYear))
-				.filter(c -> c.getPoints() >= Integer.parseInt(points))
-				.filter(c -> c.getRebounds() >= Integer.parseInt(rebounds))
-				.filter(c -> c.getAssists() >= Integer.parseInt(assists))
-				.collect(Collectors.toList());
-		
-		return cards;
+	public List<PlayerCard> getAllCards()throws CardNotFoundException{
+		return pcr.findAll();
 	}
 	
-	public PlayerCard getCardById(int id) {
+	public List<PlayerCard> getAvailableCards(){
+		return pcr.findAvailableCards();
+	}
+	
+	public PlayerCard getCardById(int id)throws CardNotFoundException {
+		if(pcr.findCardById(id)==null) {
+			throw new CardNotFoundException();
+		}
 		return pcr.findCardById(id);
+	}
+	
+	public List<PlayerCard> getCardsByName(String name) {
+		if(pcr.findCardsByName(name).isEmpty()) {
+			throw new CardNotFoundException();
+		}
+		return pcr.findCardsByName(name);
+	}
+	
+	public List<PlayerCard> getCardsByPoints(int points) {
+		return pcr.findCardsByPoints(points);
 	}
 	
 	@Transactional
@@ -56,10 +62,11 @@ public class PlayerCardService {
 	}
 	
 	@Transactional
-	public void deleteCard(int id) throws CardNotFoundException {
+	public boolean deleteCard(int id) throws CardNotFoundException {
 		// try to retrieve a card by id, if it doesn't exist, throw an exception
 		getCardById(id);
 
 		pcr.deleteById(id);
+		return true;
 	}
 }

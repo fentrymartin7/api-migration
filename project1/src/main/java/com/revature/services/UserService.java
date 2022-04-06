@@ -51,6 +51,14 @@ public class UserService {
 		return new UserDTO(user);
 	}
 	
+	public UserDTO getUserByUsername(String username) throws UserNotFoundException {
+		User user = userRepo.findUserByUsername(username);
+		
+		log.info(MDC.get("userToken"));
+		return new UserDTO(user);
+	}
+	
+	
 	public List<UserDTO> getUsersByRole(Role role){
 		List<User> users = userRepo.findUsersByRole(role);
 		
@@ -73,10 +81,11 @@ public class UserService {
 	}
 	
 	@Transactional
-	public void deleteUser(int id) throws UserNotFoundException {
+	public boolean deleteUser(int id) throws UserNotFoundException {
 		// this tries to retrieve a user by id, if it doesn't exist, throws an exception
 		getUserById(id);
 
 		userRepo.deleteById(id);
+		return true;
 	}
 }

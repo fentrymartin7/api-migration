@@ -20,38 +20,51 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.dtos.UserDTO;
+import com.revature.exceptions.CardNotFoundException;
 import com.revature.models.PlayerCard;
+import com.revature.models.User;
 import com.revature.services.AuthService;
 import com.revature.services.PlayerCardService;
+import com.revature.services.UserService;
+
+import io.jsonwebtoken.Claims;
 
 @RestController
 @RequestMapping("/cards")
 public class PlayerCardController {
 
 	private PlayerCardService pcs;
+	private UserService userService;
 	private AuthService authService;
 	private static Logger log = LoggerFactory.getLogger(PlayerCardController.class); 
 	
 	@Autowired
-	public PlayerCardController(PlayerCardService pcs, AuthService authService) {
+	public PlayerCardController(PlayerCardService pcs, UserService userService, AuthService authService) {
 		super();
 		this.pcs = pcs;
+		this.userService = userService;
 		this.authService = authService;
 	}
 	
 	@GetMapping
 	public ResponseEntity<List<PlayerCard>> getAllCards(@RequestParam(name="name",required=false)String name,
-														@RequestParam(name="position",required=false)String position,
-														@RequestParam(name="draftYear",required=false)String draftYear,
-														@RequestParam(name="points",required=false)String points,
-														@RequestParam(name="rebounds",required=false)String rebounds,
-														@RequestParam(name="assists",required=false)String assists){
+														@RequestParam(name="points",required=false)String points){
 		
-//		if(points!=null ) {
-//			return new ResponseEntity<>(pcs.getCardsByPoints(Integer.parseInt(points)),HttpStatus.OK);
-//		}
+		if(name!=null) {
+			return new ResponseEntity<>(pcs.getCardsByName(name),HttpStatus.OK);
+		}
+		if(points!=null ) {
+			return new ResponseEntity<>(pcs.getCardsByPoints(Integer.parseInt(points)),HttpStatus.OK);
+		}
 		log.info("Cards retrieved.");
-		return new ResponseEntity<>(pcs.getAllCards(name,position,draftYear,points,rebounds,assists), HttpStatus.OK);
+		return new ResponseEntity<>(pcs.getAllCards(), HttpStatus.OK);
+	}
+	
+	@GetMapping("available")
+	public ResponseEntity<List<PlayerCard>> getAvailableCards(){
+		
+		return new ResponseEntity<>(pcs.getAvailableCards(),HttpStatus.OK);
 	}
 	
 	@PostMapping 
@@ -60,13 +73,16 @@ public class PlayerCardController {
 		/*-
 		 * logic to return appropriate response based on creation success
 		 */
-		// this logic should be handled as a filter
 		MDC.put("requestId", UUID.randomUUID().toString());
-		// auth logic throws a runtime exception if not verified, better placed as a filter
+
+		Claims claims = authService.verify(token);
+		if(!claims.get("role").toString().equals("ADMIN")) {
+			log.warn("Unauthorized attempt to add a new card.");
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		}
 		
-			
-		log.info("New card created.");
 		pcs.createCard(card);
+		log.info("New card created.");
 		return new ResponseEntity<>("Card created successfully!", HttpStatus.CREATED);
 	}
 	
@@ -79,6 +95,12 @@ public class PlayerCardController {
 	public ResponseEntity<PlayerCard> updateCard(@PathVariable("id")int id, @RequestBody PlayerCard card,
 												@RequestHeader(value="Authorization",required=false)String token) {
 		MDC.put("requestId", UUID.randomUUID().toString());
+		
+		Claims claims = authService.verify(token);
+		if(!claims.get("role").toString().equals("ADMIN")) {
+			log.warn("Unauthorized attempt to add a new card.");
+			return new ResponseEntity<>(null,HttpStatus.FORBIDDEN);
+		}
 				
 		log.info("Card of id "+ id + "was updated.");
 		return new ResponseEntity<>(pcs.updateCard(id, card), HttpStatus.OK);
@@ -89,6 +111,15 @@ public class PlayerCardController {
 												@RequestHeader(value="Authorization",required=false)String token) {
 		MDC.put("requestId", UUID.randomUUID().toString());
 			
+		Claims claims = authService.verify(token);
+		if(!claims.get("role").toString().equals("ADMIN")) {
+			log.warn("Unauthorized attempt to add a new card.");
+			return new ResponseEntity<>("Unauthorized attempt to delete card",HttpStatus.FORBIDDEN);
+		}
+		
+		if(pcs.getCardById(id)==null) {
+			throw new CardNotFoundException();
+		}
 		
 		pcs.deleteCard(id);
 		log.info("Card of id "+ id + "was deleted.");
