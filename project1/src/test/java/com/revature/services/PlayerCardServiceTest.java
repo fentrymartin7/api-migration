@@ -17,11 +17,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.revature.exceptions.CardNotFoundException;
 import com.revature.models.PlayerCard;
 import com.revature.repositories.PlayerCardRepository;
+import com.revature.repositories.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class PlayerCardServiceTest {
 	
 	static PlayerCardRepository cardRepo;
+	static UserRepository userRepo;
 	static PlayerCardService cardServ;
 	static List<PlayerCard> cards = new ArrayList<>();
 	static PlayerCard card;
@@ -29,7 +31,8 @@ public class PlayerCardServiceTest {
 	@BeforeAll
 	public static void setup() {
 		cardRepo = mock(PlayerCardRepository.class);
-		cardServ = new PlayerCardService(cardRepo);
+		userRepo = mock(UserRepository.class);
+		cardServ = new PlayerCardService(cardRepo,userRepo);
 		card = new PlayerCard(1,"x","x",1999,1,1,1,null);
 		cards.add(card);
 	}
@@ -56,7 +59,7 @@ public class PlayerCardServiceTest {
 	
 	@Test
 	public void getCardByIdTest() {
-		when(cardRepo.findCardById(1)).thenReturn(card);
+		when(cardRepo.findById(1)).thenReturn(Optional.of(card));
 		assertEquals(card, cardServ.getCardById(1));
 	}
 	
@@ -97,7 +100,7 @@ public class PlayerCardServiceTest {
 	}
 	
 	@Test
-	public void updateCardTest() throws CardNotFoundException {
+	public void updateCardTest() {
 		when(cardRepo.findById(1)).thenReturn(Optional.of(card));
 		when(cardRepo.save(card)).thenReturn(card);
 		assertEquals(card, cardServ.updateCard(1, card));
