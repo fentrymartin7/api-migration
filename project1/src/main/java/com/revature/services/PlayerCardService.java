@@ -36,6 +36,20 @@ public class PlayerCardService {
 			{
 				cardsDto.add(new PlayerCardDTO(c));
 			}
+			else
+			{
+				PlayerCardDTO p = new PlayerCardDTO();
+				p.setId(c.getId());
+				p.setName(c.getName());
+				p.setPosition(c.getPosition());
+				p.setDraftYear(c.getDraftYear());
+				p.setPoints(c.getPoints());
+				p.setRebounds(c.getRebounds());
+				p.setAssists(c.getAssists());
+				p.setUserDto(null);
+				
+				cardsDto.add(p);
+			}
 		}
 		
 		return cardsDto;
@@ -49,6 +63,20 @@ public class PlayerCardService {
 			if(c.getCardOwner()!=null)
 			{
 				cardsDto.add(new PlayerCardDTO(c));
+			}
+			else
+			{
+				PlayerCardDTO p = new PlayerCardDTO();
+				p.setId(c.getId());
+				p.setName(c.getName());
+				p.setPosition(c.getPosition());
+				p.setDraftYear(c.getDraftYear());
+				p.setPoints(c.getPoints());
+				p.setRebounds(c.getRebounds());
+				p.setAssists(c.getAssists());
+				p.setUserDto(null);
+				
+				cardsDto.add(p);
 			}
 		}
 		
@@ -77,6 +105,20 @@ public class PlayerCardService {
 			{
 				cardsDto.add(new PlayerCardDTO(c));
 			}
+			else
+			{
+				PlayerCardDTO p = new PlayerCardDTO();
+				p.setId(c.getId());
+				p.setName(c.getName());
+				p.setPosition(c.getPosition());
+				p.setDraftYear(c.getDraftYear());
+				p.setPoints(c.getPoints());
+				p.setRebounds(c.getRebounds());
+				p.setAssists(c.getAssists());
+				p.setUserDto(null);
+				
+				cardsDto.add(p);
+			}
 		}
 		
 		return cardsDto;
@@ -90,6 +132,20 @@ public class PlayerCardService {
 			if(c.getCardOwner()!=null)
 			{
 				cardsDto.add(new PlayerCardDTO(c));
+			}
+			else
+			{
+				PlayerCardDTO p = new PlayerCardDTO();
+				p.setId(c.getId());
+				p.setName(c.getName());
+				p.setPosition(c.getPosition());
+				p.setDraftYear(c.getDraftYear());
+				p.setPoints(c.getPoints());
+				p.setRebounds(c.getRebounds());
+				p.setAssists(c.getAssists());
+				p.setUserDto(null);
+				
+				cardsDto.add(p);
 			}
 		}
 		
