@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -7,6 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.revature.dtos.PlayerCardDTO;
 import com.revature.exceptions.CardNotFoundException;
 import com.revature.models.PlayerCard;
 import com.revature.repositories.PlayerCardRepository;
@@ -22,15 +24,35 @@ public class PlayerCardService {
 	public PlayerCardService(PlayerCardRepository pcr,UserRepository ur) {
 		super();
 		this.pcr = pcr;
-		this.ur = ur;
+		this.ur = ur; 
 	}
 	
-	public List<PlayerCard> getAllCards()throws CardNotFoundException{
-		return pcr.findAll();
+	public List<PlayerCardDTO> getAllCards()throws CardNotFoundException{
+		List<PlayerCard> cards = pcr.findAll();
+		
+		List<PlayerCardDTO> cardsDto = new ArrayList<>();
+		for(PlayerCard c : cards) {
+			if(c.getCardOwner()!=null)
+			{
+				cardsDto.add(new PlayerCardDTO(c));
+			}
+		}
+		
+		return cardsDto;
 	}
 	
-	public List<PlayerCard> getMyCards(int id)throws CardNotFoundException{
-		return pcr.findMyCards(ur.findById(id).get()); 
+	public List<PlayerCardDTO> getMyCards(int id)throws CardNotFoundException{
+		List<PlayerCard> cards = pcr.findMyCards(ur.findById(id).get()); 
+		
+		List<PlayerCardDTO> cardsDto = new ArrayList<>();
+		for(PlayerCard c : cards) {
+			if(c.getCardOwner()!=null)
+			{
+				cardsDto.add(new PlayerCardDTO(c));
+			}
+		}
+		
+		return cardsDto;
 	}
 	
 	public List<PlayerCard> getAvailableCards(){
@@ -44,15 +66,34 @@ public class PlayerCardService {
 		return pcr.findCardById(id);
 	}
 	
-	public List<PlayerCard> getCardsByName(String name) {
+	public List<PlayerCardDTO> getCardsByName(String name) {
 		if(pcr.findCardsByName(name).isEmpty()) {
 			throw new CardNotFoundException("No card was found of that name.");
 		}
-		return pcr.findCardsByName(name);
+		List<PlayerCard> cards = pcr.findCardsByName(name);
+		List<PlayerCardDTO> cardsDto = new ArrayList<>();
+		for(PlayerCard c : cards) {
+			if(c.getCardOwner()!=null)
+			{
+				cardsDto.add(new PlayerCardDTO(c));
+			}
+		}
+		
+		return cardsDto;
 	}
 	
-	public List<PlayerCard> getCardsByPoints(int points) {
-		return pcr.findCardsByPoints(points);
+	public List<PlayerCardDTO> getCardsByPoints(int points) {
+		
+		List<PlayerCard> cards = pcr.findCardsByPoints(points);
+		List<PlayerCardDTO> cardsDto = new ArrayList<>();
+		for(PlayerCard c : cards) {
+			if(c.getCardOwner()!=null)
+			{
+				cardsDto.add(new PlayerCardDTO(c));
+			}
+		}
+		
+		return cardsDto;
 	}
 	
 	@Transactional

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.dtos.PlayerCardDTO;
 import com.revature.exceptions.AuthorizationException;
 import com.revature.exceptions.CardNotFoundException;
 import com.revature.models.PlayerCard;
@@ -44,7 +45,7 @@ public class PlayerCardController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<PlayerCard>> getAllCards(@RequestParam(name="name",required=false)String name,
+	public ResponseEntity<List<PlayerCardDTO>> getAllCards(@RequestParam(name="name",required=false)String name,
 														@RequestParam(name="points",required=false)String points){
 		MDC.put("requestId", UUID.randomUUID().toString());
 		
@@ -59,7 +60,7 @@ public class PlayerCardController {
 	}
 	
 	@GetMapping("/my-cards")
-	public ResponseEntity<List<PlayerCard>> getMyCards(@RequestHeader(value="Authorization",required=false) String token){
+	public ResponseEntity<List<PlayerCardDTO>> getMyCards(@RequestHeader(value="Authorization",required=false) String token){
 		MDC.put("requestId", UUID.randomUUID().toString());
 	
 		Claims claims = authService.verify(token);
