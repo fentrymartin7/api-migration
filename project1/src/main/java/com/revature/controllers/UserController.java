@@ -32,7 +32,7 @@ public class UserController {
 
 	private UserService userService;
 	private AuthService authService;
-	private static Logger log = LoggerFactory.getLogger(UserController.class);
+	private static Logger log = LoggerFactory.getLogger(UserController.class); 
 	
 	@Autowired
 	public UserController(UserService userService,AuthService authService){

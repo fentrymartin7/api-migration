@@ -40,7 +40,7 @@ public class AuthController {
 
 		// setting headers to be returned to the front end
 		HttpHeaders hh = new HttpHeaders();
-		hh.set("Authorization", token);
+		hh.set("Authorization", token); 
 		
 		log.info(username+"'s login was successful.");
 		// constructor for response entity(body, headers, status)

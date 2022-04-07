@@ -20,13 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.revature.dtos.UserDTO;
 import com.revature.exceptions.CardNotFoundException;
 import com.revature.models.PlayerCard;
-import com.revature.models.User;
 import com.revature.services.AuthService;
 import com.revature.services.PlayerCardService;
-import com.revature.services.UserService;
 
 import io.jsonwebtoken.Claims;
 
@@ -35,21 +32,20 @@ import io.jsonwebtoken.Claims;
 public class PlayerCardController {
 
 	private PlayerCardService pcs;
-	private UserService userService;
 	private AuthService authService;
 	private static Logger log = LoggerFactory.getLogger(PlayerCardController.class); 
 	
 	@Autowired
-	public PlayerCardController(PlayerCardService pcs, UserService userService, AuthService authService) {
+	public PlayerCardController(PlayerCardService pcs, AuthService authService) {
 		super();
 		this.pcs = pcs;
-		this.userService = userService;
-		this.authService = authService;
+		this.authService = authService; 
 	}
 	
 	@GetMapping
 	public ResponseEntity<List<PlayerCard>> getAllCards(@RequestParam(name="name",required=false)String name,
 														@RequestParam(name="points",required=false)String points){
+		MDC.put("requestId", UUID.randomUUID().toString());
 		
 		if(name!=null) {
 			return new ResponseEntity<>(pcs.getCardsByName(name),HttpStatus.OK);
@@ -61,10 +57,12 @@ public class PlayerCardController {
 		return new ResponseEntity<>(pcs.getAllCards(), HttpStatus.OK);
 	}
 	
-	@GetMapping("available")
-	public ResponseEntity<List<PlayerCard>> getAvailableCards(){
-		
-		return new ResponseEntity<>(pcs.getAvailableCards(),HttpStatus.OK);
+	@GetMapping("/my-cards")
+	public ResponseEntity<List<PlayerCard>> getMyCards(@RequestHeader(value="Authorization",required=false) String token){
+		MDC.put("requestId", UUID.randomUUID().toString());
+	
+		Claims claims = authService.verify(token);
+		return new ResponseEntity<>(pcs.getMyCards(Integer.parseInt(claims.get("id").toString())),HttpStatus.OK);
 	}
 	
 	@PostMapping 
@@ -78,7 +76,7 @@ public class PlayerCardController {
 		Claims claims = authService.verify(token);
 		if(!claims.get("role").toString().equals("ADMIN")) {
 			log.warn("Unauthorized attempt to add a new card.");
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			return new ResponseEntity<>("Not authorized.",HttpStatus.FORBIDDEN);
 		}
 		
 		pcs.createCard(card);
@@ -88,6 +86,7 @@ public class PlayerCardController {
 	
 	@GetMapping("{id}")
 	public ResponseEntity<PlayerCard> getById(@PathVariable("id")int id) {
+		MDC.put("requestId", UUID.randomUUID().toString());
 		return new ResponseEntity<>(pcs.getCardById(id), HttpStatus.OK);
 	}
 	

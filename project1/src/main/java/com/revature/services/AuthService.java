@@ -34,6 +34,16 @@ public class AuthService {
 	
 	public String register(User user) {
 		
+		if(userRepo.findUserByUsername(user.getUsername())!=null) {
+			throw new AuthenticationException("That username is taken.");
+		}
+		if(user.getUsername()==null) {
+			throw new AuthenticationException("Username cannot be empty.");
+		}
+		if(user.getPassword()==null) {
+			throw new AuthenticationException("Password cannot be empty.");
+		}
+		
 		userRepo.save(user);
 		log.info("A new user was created");
 		
@@ -45,7 +55,7 @@ public class AuthService {
 		JwtBuilder token = Jwts.builder()
 				.setClaims(claims)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis()+180000))
+				.setExpiration(new Date(System.currentTimeMillis()+900000))
 				.setSubject(user.getUsername())
 				.signWith(SignatureAlgorithm.HS256, secretKey);
 		
@@ -69,7 +79,7 @@ public class AuthService {
 		JwtBuilder token = Jwts.builder()
 				.setClaims(claims)
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis()+180000))
+				.setExpiration(new Date(System.currentTimeMillis()+900000))
 				.setSubject(username)
 				.signWith(SignatureAlgorithm.HS256, secretKey);
 		
@@ -83,7 +93,6 @@ public class AuthService {
 				.parseClaimsJws(token)
 				.getBody();
 		
-		System.out.println(jwt.get("username").toString()+" IS THE USERNAME!!");
 		return jwt;
 	}
 	

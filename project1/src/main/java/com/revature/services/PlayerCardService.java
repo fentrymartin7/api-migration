@@ -9,22 +9,28 @@ import org.springframework.stereotype.Service;
 
 import com.revature.exceptions.CardNotFoundException;
 import com.revature.models.PlayerCard;
-import com.revature.models.User;
 import com.revature.repositories.PlayerCardRepository;
+import com.revature.repositories.UserRepository;
 
 @Service
 public class PlayerCardService {
 
 	private PlayerCardRepository pcr;
+	private UserRepository ur;
 	
 	@Autowired
-	public PlayerCardService(PlayerCardRepository pcr) {
+	public PlayerCardService(PlayerCardRepository pcr,UserRepository ur) {
 		super();
 		this.pcr = pcr;
+		this.ur = ur;
 	}
 	
 	public List<PlayerCard> getAllCards()throws CardNotFoundException{
 		return pcr.findAll();
+	}
+	
+	public List<PlayerCard> getMyCards(int id)throws CardNotFoundException{
+		return pcr.findMyCards(ur.findById(id).get()); 
 	}
 	
 	public List<PlayerCard> getAvailableCards(){
@@ -33,14 +39,14 @@ public class PlayerCardService {
 	
 	public PlayerCard getCardById(int id)throws CardNotFoundException {
 		if(pcr.findCardById(id)==null) {
-			throw new CardNotFoundException();
+			throw new CardNotFoundException("No card was found of that id.");
 		}
 		return pcr.findCardById(id);
 	}
 	
 	public List<PlayerCard> getCardsByName(String name) {
 		if(pcr.findCardsByName(name).isEmpty()) {
-			throw new CardNotFoundException();
+			throw new CardNotFoundException("No card was found of that name.");
 		}
 		return pcr.findCardsByName(name);
 	}
