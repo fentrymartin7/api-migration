@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.dtos.UserDTO;
+import com.revature.exceptions.AuthorizationException;
 import com.revature.models.User;
 import com.revature.services.AuthService;
 import com.revature.services.UserService;
@@ -49,7 +50,7 @@ public class UserController {
 		Claims claims = authService.verify(token);
 		if(!claims.get("role").toString().equals("ADMIN")) {
 			log.warn("Unauthorized.");
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			throw new AuthorizationException();
 		}
 			
 		log.info(claims.get("username")+" retrieved the list of users.");
@@ -64,7 +65,7 @@ public class UserController {
 		Claims claims = authService.verify(token);
 		if(!claims.get("role").toString().equals("ADMIN")) {
 			log.warn("Unauthorized attempt to create new user.");
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			throw new AuthorizationException();
 		}
 		userService.createUser(user);
 		log.info(claims.get("username")+" created a new user.");
@@ -77,7 +78,7 @@ public class UserController {
 		Claims claims = authService.verify(token);
 		if(!claims.get("role").toString().equals("ADMIN")) {
 			log.warn("Unauthorized attempt to create new user.");
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			throw new AuthorizationException();
 		}
 		MDC.put("userToken", token);
 		UserDTO user = userService.getUserById(id);
@@ -91,7 +92,7 @@ public class UserController {
 		Claims claims = authService.verify(token);
 		if(!claims.get("role").toString().equals("ADMIN")) {
 			log.warn("Unauthorized attempt to update user of id "+id+".");
-			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+			throw new AuthorizationException();
 		}
 		return new ResponseEntity<>(userService.updateUser(id, user), HttpStatus.CREATED);
 	}
@@ -101,7 +102,7 @@ public class UserController {
 		Claims claims = authService.verify(token);
 		if(!claims.get("role").toString().equals("ADMIN")) {
 			log.warn("Unauthorized attempt to delete user of id "+id+".");
-			return new ResponseEntity<>("Unauthorized attempt to delete user of id "+id,HttpStatus.FORBIDDEN);
+			throw new AuthorizationException();
 		}
 		userService.deleteUser(id);
 		return new ResponseEntity<>("User was deleted",HttpStatus.OK);

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.exceptions.AuthorizationException;
 import com.revature.exceptions.CardNotFoundException;
 import com.revature.models.PlayerCard;
 import com.revature.services.AuthService;
@@ -64,7 +65,7 @@ public class PlayerCardController {
 		Claims claims = authService.verify(token);
 		return new ResponseEntity<>(pcs.getMyCards(Integer.parseInt(claims.get("id").toString())),HttpStatus.OK);
 	}
-	
+	 
 	@PostMapping 
 	public ResponseEntity<String> postPlayerCard(@RequestBody PlayerCard card, 
 												@RequestHeader(value="Authorization",required=false) String token) {
@@ -76,7 +77,7 @@ public class PlayerCardController {
 		Claims claims = authService.verify(token);
 		if(!claims.get("role").toString().equals("ADMIN")) {
 			log.warn("Unauthorized attempt to add a new card.");
-			return new ResponseEntity<>("Not authorized.",HttpStatus.FORBIDDEN);
+			throw new AuthorizationException();
 		}
 		
 		pcs.createCard(card);
@@ -98,7 +99,7 @@ public class PlayerCardController {
 		Claims claims = authService.verify(token);
 		if(!claims.get("role").toString().equals("ADMIN")) {
 			log.warn("Unauthorized attempt to add a new card.");
-			return new ResponseEntity<>(null,HttpStatus.FORBIDDEN);
+			throw new AuthorizationException();
 		}
 				
 		log.info("Card of id "+ id + "was updated.");
@@ -113,7 +114,7 @@ public class PlayerCardController {
 		Claims claims = authService.verify(token);
 		if(!claims.get("role").toString().equals("ADMIN")) {
 			log.warn("Unauthorized attempt to add a new card.");
-			return new ResponseEntity<>("Unauthorized attempt to delete card",HttpStatus.FORBIDDEN);
+			throw new AuthorizationException();
 		}
 		
 		if(pcs.getCardById(id)==null) {
