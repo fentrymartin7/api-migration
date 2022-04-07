@@ -59,11 +59,11 @@ public class PlayerCardService {
 		return pcr.findAvailableCards();
 	}
 	
-	public PlayerCard getCardById(int id)throws CardNotFoundException {
+	public PlayerCardDTO getCardById(int id)throws CardNotFoundException {
 		if(pcr.findCardById(id)==null) {
 			throw new CardNotFoundException("No card was found of that id.");
 		}
-		return pcr.findCardById(id);
+		return new PlayerCardDTO(pcr.findCardById(id));
 	}
 	
 	public List<PlayerCardDTO> getCardsByName(String name) {

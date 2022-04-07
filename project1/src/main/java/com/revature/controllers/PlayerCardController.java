@@ -87,7 +87,7 @@ public class PlayerCardController {
 	}
 	
 	@GetMapping("{id}")
-	public ResponseEntity<PlayerCard> getById(@PathVariable("id")int id) {
+	public ResponseEntity<PlayerCardDTO> getById(@PathVariable("id")int id) {
 		MDC.put("requestId", UUID.randomUUID().toString());
 		return new ResponseEntity<>(pcs.getCardById(id), HttpStatus.OK);
 	}
