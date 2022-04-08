@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
 	
 	@ExceptionHandler(CardNotFoundException.class)
 	public ResponseEntity<String> handleCardNotFoundException(CardNotFoundException e) {
-		LOG.warn("CardNotFound exception was handled.", e);
+		LOG.debug("CardNotFound exception was handled.", e);
 		return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 	}
 	

@@ -77,7 +77,7 @@ public class PlayerCardController {
 
 		Claims claims = authService.verify(token);
 		if(!claims.get("role").toString().equals("ADMIN")) {
-			log.warn("Unauthorized attempt to add a new card.");
+			log.warn("Unauthorized attempt to add a new card."); 
 			throw new AuthorizationException();
 		}
 		

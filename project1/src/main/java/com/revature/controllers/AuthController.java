@@ -34,6 +34,7 @@ public class AuthController {
 	public ResponseEntity<String> login(@RequestParam(name="username")String username, @RequestParam(name="password")String password){
 		// Generated a request id for new requests to be handled, this id can be attached to logs to show the flow of the request through the application
 		MDC.put("requestId", UUID.randomUUID().toString());
+		log.debug("Starting login.");
 		
 		// generates a token if credentials are correct
 		String token = authServ.login(username, password);
@@ -42,6 +43,7 @@ public class AuthController {
 		HttpHeaders hh = new HttpHeaders();
 		hh.set("Authorization", token); 
 		
+		log.debug("Ending login.");
 		log.info(username+"'s login was successful.");
 		// constructor for response entity(body, headers, status)
 		return new ResponseEntity<>("Login successful.", hh, HttpStatus.OK);
@@ -50,12 +52,14 @@ public class AuthController {
 	@PostMapping("/register")
 	public ResponseEntity<String> register(@RequestParam(name="username")String username, @RequestParam(name="password")String password){
 		MDC.put("requestId", UUID.randomUUID().toString());
+		log.debug("Starting register.");
 		String token = authServ.register(new User(username,password));
 		
 		// set authorization header
 		HttpHeaders hh = new HttpHeaders();
 		hh.set("Authorization", token);
 		
+		log.debug("Ending register.");
 		log.info(username+" successfully registered.");
 		
 		return new ResponseEntity<>("Registration successful.",hh,HttpStatus.OK);

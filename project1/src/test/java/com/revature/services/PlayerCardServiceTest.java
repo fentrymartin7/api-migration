@@ -14,8 +14,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.revature.dtos.PlayerCardDTO;
 import com.revature.exceptions.CardNotFoundException;
 import com.revature.models.PlayerCard;
+import com.revature.models.Role;
+import com.revature.models.User;
 import com.revature.repositories.PlayerCardRepository;
 import com.revature.repositories.UserRepository;
 
@@ -26,21 +29,27 @@ public class PlayerCardServiceTest {
 	static UserRepository userRepo;
 	static PlayerCardService cardServ;
 	static List<PlayerCard> cards = new ArrayList<>();
+	static List<PlayerCardDTO> cardsDto = new ArrayList<>();
 	static PlayerCard card;
+	static PlayerCardDTO cardDto;
+	static User user;
 	
 	@BeforeAll
 	public static void setup() {
 		cardRepo = mock(PlayerCardRepository.class);
 		userRepo = mock(UserRepository.class);
 		cardServ = new PlayerCardService(cardRepo,userRepo);
-		card = new PlayerCard(1,"x","x",1999,1,1,1,null);
+		user = new User(1,"xxx","yyy",Role.ADMIN);
+		card = new PlayerCard(1,"x","x",1999,1,1,1,user);
+		cardDto = new PlayerCardDTO(card);
 		cards.add(card);
+		cardsDto.add(cardDto);
 	}
 	
 	@Test
 	public void getAllCardsTest() {
 		when(cardRepo.findAll()).thenReturn(cards);
-		assertEquals(cards, cardServ.getAllCards());
+		assertEquals(cardsDto, cardServ.getAllCards());
 	}
 	
 	@Test
@@ -60,7 +69,7 @@ public class PlayerCardServiceTest {
 	@Test
 	public void getCardByIdTest() {
 		when(cardRepo.findById(1)).thenReturn(Optional.of(card));
-		assertEquals(card, cardServ.getCardById(1));
+		assertEquals(cardDto, cardServ.getCardById(1));
 	}
 	
 	@Test
@@ -75,7 +84,7 @@ public class PlayerCardServiceTest {
 	public void getCardsByNameTest() {
 		cards.add(new PlayerCard(2,"x","g",1998,1,1,1,null));
 		when(cardRepo.findCardsByName("x")).thenReturn(cards);
-		assertEquals(cards, cardServ.getCardsByName("x"));
+		assertEquals(cardsDto, cardServ.getCardsByName("x"));
 	}
 	
 	@Test
@@ -90,7 +99,7 @@ public class PlayerCardServiceTest {
 	public void getCardsByPointsTest() {
 		cards.add(new PlayerCard(2,"x","g",1998,1,1,1,null));
 		when(cardRepo.findCardsByPoints(1)).thenReturn(cards);
-		assertEquals(cards, cardServ.getCardsByPoints(1));
+		assertEquals(cardsDto, cardServ.getCardsByPoints(1));
 	}
 	
 	@Test
